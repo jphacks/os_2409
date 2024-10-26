@@ -1,4 +1,4 @@
-import lgpio # type: ignore
+import lgpio  # type: ignore
 import time
 from typing import Tuple
 
@@ -15,20 +15,14 @@ class RotaryEncoder:
         self.last_state: Tuple[int, int] = (0, 0)
         
         # ピンを入力として設定し、プルアップ抵抗を有効化
-        lgpio.gpio_claim_input(self.h, self.sia_pin, lgpio.SET_PULL_UP)
-        lgpio.gpio_claim_input(self.h, self.sib_pin, lgpio.SET_PULL_UP)
-        lgpio.gpio_claim_input(self.h, self.sw_pin, lgpio.SET_PULL_UP)
-        
-        # エッジ検出の設定
-        lgpio.gpio_set_edge(self.h, self.sia_pin, lgpio.BOTH_EDGES)
-        lgpio.gpio_set_edge(self.h, self.sib_pin, lgpio.BOTH_EDGES)
-        lgpio.gpio_set_edge(self.h, self.sw_pin, lgpio.FALLING_EDGE)
+        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sia_pin)
+        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sib_pin)
+        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sw_pin)
         
         # コールバックの設定
         self.cb_sia = lgpio.callback(self.h, self.sia_pin, lgpio.BOTH_EDGES, self._encoder_callback)
         self.cb_sib = lgpio.callback(self.h, self.sib_pin, lgpio.BOTH_EDGES, self._encoder_callback)
         self.cb_sw = lgpio.callback(self.h, self.sw_pin, lgpio.FALLING_EDGE, self._switch_callback)
-
 
     def _encoder_callback(self, chip: int, gpio: int, level: int, tick: int) -> None:
         # SIAとSIBの現在の状態を取得
@@ -75,7 +69,7 @@ class RotaryEncoder:
 
 def main():
     # GPIOチップハンドルを開く
-    h = lgpio.gpiochip_open(4)
+    h = lgpio.gpiochip_open(0)  # 通常はGPIOチップ0を使用します
     
     # ロータリーエンコーダーの初期化
     encoder = RotaryEncoder(h)
@@ -84,7 +78,7 @@ def main():
         print("Monitoring rotation... Press Ctrl+C to exit")
         while True:
             time.sleep(0.1)
-    
+
     except KeyboardInterrupt:
         print("\nProgram terminated by user")
     finally:
