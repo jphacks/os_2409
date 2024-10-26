@@ -71,7 +71,7 @@ if __name__ == '__main__':
     try:
         setup()
         # 2回転（時計回り）
-        rotate(2, clockwise=True)
+        rotate(1, clockwise=True)
         time.sleep(1)  # 1秒待機
         cleanup()
     except KeyboardInterrupt:
