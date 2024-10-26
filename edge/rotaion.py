@@ -14,10 +14,10 @@ class RotaryEncoder:
         self.last_time = time.time()
         self.last_state: Tuple[int, int] = (0, 0)
         
-        # ピンを入力として設定
-        lgpio.gpio_claim_input(self.h, self.sia_pin)
-        lgpio.gpio_claim_input(self.h, self.sib_pin)
-        lgpio.gpio_claim_input(self.h, self.sw_pin)
+        # ピンを入力として設定し、プルアップ抵抗を有効化
+        lgpio.gpio_claim_input(self.h, self.sia_pin, lgpio.SET_PULL_UP)
+        lgpio.gpio_claim_input(self.h, self.sib_pin, lgpio.SET_PULL_UP)
+        lgpio.gpio_claim_input(self.h, self.sw_pin, lgpio.SET_PULL_UP)
         
         # エッジ検出の設定
         lgpio.gpio_set_edge(self.h, self.sia_pin, lgpio.BOTH_EDGES)
@@ -28,6 +28,7 @@ class RotaryEncoder:
         self.cb_sia = lgpio.callback(self.h, self.sia_pin, lgpio.BOTH_EDGES, self._encoder_callback)
         self.cb_sib = lgpio.callback(self.h, self.sib_pin, lgpio.BOTH_EDGES, self._encoder_callback)
         self.cb_sw = lgpio.callback(self.h, self.sw_pin, lgpio.FALLING_EDGE, self._switch_callback)
+
 
     def _encoder_callback(self, chip: int, gpio: int, level: int, tick: int) -> None:
         # SIAとSIBの現在の状態を取得
