@@ -1,4 +1,4 @@
-from edge.config import MOTOR_TURNS
+from .config import *
 from .motion_detector import MotionDetector
 from .motor_controller import MotorController
 import time
