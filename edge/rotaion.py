@@ -15,9 +15,9 @@ class RotaryEncoder:
         self.last_state: Tuple[int, int] = (0, 0)
         
         # ピンを入力として設定し、プルアップ抵抗を有効化
-        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sia_pin)
-        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sib_pin)
-        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sw_pin)
+        lgpio.gpio_claim_input(self.h, lgpio.LG_SET_PULL_UP, self.sia_pin)
+        lgpio.gpio_claim_input(self.h, lgpio.LG_SET_PULL_UP, self.sib_pin)
+        lgpio.gpio_claim_input(self.h, lgpio.LG_SET_PULL_UP, self.sw_pin)
         
         # コールバックの設定
         self.cb_sia = lgpio.callback(self.h, self.sia_pin, lgpio.BOTH_EDGES, self._encoder_callback)
@@ -69,7 +69,7 @@ class RotaryEncoder:
 
 def main():
     # GPIOチップハンドルを開く
-    h = lgpio.gpiochip_open(0)  # 通常はGPIOチップ0を使用します
+    h = lgpio.gpiochip_open(4)  # あなたの環境に合わせて4に戻す
     
     # ロータリーエンコーダーの初期化
     encoder = RotaryEncoder(h)
