@@ -1,0 +1,2 @@
+python-dotenv==1.0.1
+slackweb==1.0.5
