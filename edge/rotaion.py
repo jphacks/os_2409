@@ -13,10 +13,11 @@ class RotaryEncoder:
         self.last_time = time.time()
         self.last_state: Tuple[int, int] = (0, 0)
         
-        # ピンの設定
+        # ピンの設定（プルアップ付きの入力として設定）
         for pin in [sia_pin, sib_pin, sw_pin]:
             lgpio.gpio_claim_input(self.h, pin)
-            lgpio.gpio_pull_up(self.h, pin)
+            # プルアップ設定を gpio_set_pull_up_down に変更
+            lgpio.gpio_set_pull_up_down(self.h, pin, lgpio.SET_PULL_UP)
         
         # コールバックの設定
         lgpio.gpio_set_edge(self.h, sia_pin, lgpio.BOTH_EDGES)
