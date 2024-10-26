@@ -7,17 +7,22 @@ class RotaryEncoder:
         self.h = chip_handle
         # GPIOピンの設定
         self.sia_pin = 16  # SIA
-        self.sib_pin = 19   # SIB
-        self.sw_pin = 26    # SW
+        self.sib_pin = 19  # SIB
+        self.sw_pin = 26   # SW
         self.pulses_per_rev = 20
         self.counter = 0
         self.last_time = time.time()
         self.last_state: Tuple[int, int] = (0, 0)
         
-        # ピンを入力として設定し、プルアップ抵抗を有効化
-        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sia_pin)
-        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sib_pin)
-        lgpio.gpio_claim_input(self.h, lgpio.SET_PULL_UP, self.sw_pin)
+        # ピンを入力として設定
+        lgpio.gpio_claim_input(self.h, self.sia_pin)
+        lgpio.gpio_claim_input(self.h, self.sib_pin)
+        lgpio.gpio_claim_input(self.h, self.sw_pin)
+        
+        # プルアップ抵抗を設定
+        lgpio.gpio_set_pull_up_down(self.h, self.sia_pin, lgpio.LGPIO_PULL_UP)
+        lgpio.gpio_set_pull_up_down(self.h, self.sib_pin, lgpio.LGPIO_PULL_UP)
+        lgpio.gpio_set_pull_up_down(self.h, self.sw_pin, lgpio.LGPIO_PULL_UP)
         
         # コールバックの設定
         self.cb_sia = lgpio.callback(self.h, self.sia_pin, lgpio.BOTH_EDGES, self._encoder_callback)
