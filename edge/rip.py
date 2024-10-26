@@ -1,5 +1,23 @@
 import lgpio # type: ignore
 from time import sleep, time
+import requests # type: ignore
+from datetime import datetime
+
+# POSTリクエストの設定
+SERVER_URL = "http://your-server-url/api/endpoint"  # あなたのサーバーURLに変更してください
+
+def send_post_notification(message):
+    try:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        payload = {
+            "message": message,
+            "timestamp": timestamp
+        }
+        response = requests.post(SERVER_URL, json=payload)
+        print(f"POST notification sent: {message}")
+        print(f"Server response: {response.status_code}")
+    except Exception as e:
+        print(f"Failed to send POST notification: {e}")
 
 # GPIOハンドルを開く
 h = lgpio.gpiochip_open(4)
@@ -24,7 +42,9 @@ try:
             
             # 5回連続で検出された場合、タイマー開始
             if detection_count >= 5 and not timer_running:
-                print("Timer started!")
+                start_message = "Motion detected: Timer started!"
+                print(start_message)
+                send_post_notification(start_message)
                 timer_running = True
                 start_time = time()
                 detection_count = 0  # カウントをリセット
@@ -36,7 +56,9 @@ try:
             # タイマー動作中に5回連続で非検出の場合、計測終了
             if no_detection_count >= 5 and timer_running:
                 elapsed_time = time() - start_time
-                print(f"Timer stopped! Elapsed time: {elapsed_time:.2f} seconds")
+                stop_message = f"Motion stopped: Timer ended after {elapsed_time:.2f} seconds"
+                print(stop_message)
+                send_post_notification(stop_message)
                 print("Sensor monitoring ended.")
                 break
 
@@ -45,6 +67,3 @@ except KeyboardInterrupt:
 finally:
     # GPIOをクリーンアップ
     lgpio.gpiochip_close(h)
-
-
-
