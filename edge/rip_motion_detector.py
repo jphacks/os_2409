@@ -1,92 +1,83 @@
-import lgpio # type: ignore
-from time import sleep, time
-import requests # type: ignore
+import time
 from datetime import datetime
-from .config import *
+import lgpio # type: ignore
 
-class PIRMotionDetector:
-    def __init__(self, pir_pin=MOTION_SENSOR_PIN):
-        # lgpioの初期化
-        self.h = lgpio.gpiochip_open(4)
+class PresenceMonitor:
+    def __init__(self, pir_pin):
         self.pir_pin = pir_pin
-        
-        # ピンのモード設定
+        self.h = lgpio.gpiochip_open(0)
         lgpio.gpio_claim_input(self.h, self.pir_pin)
         
-        # カウンターと状態変数
-        self.detection_count = 0
-        self.no_detection_count = 0
-        self.timer_running = False
-        self.start_time = 0
+        self.presence_timeout = 30
+        self.person_present = False
+        self.last_detection_time = 0
+        
+        self.current_session_start = None
+        self.detection_started = False
+        self.detection_ended = False
+        self.current_duration = 0
 
-    def send_post_notification(self, message):
-        """サーバーに通知を送信"""
+    def monitor_presence(self):
         try:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            payload = {
-                "message": message,
-                "timestamp": timestamp
-            }
-            response = requests.post(SERVER_URL, json=payload)
-            print(f"POST notification sent: {message}")
-            print(f"Server response: {response.status_code}")
-        except Exception as e:
-            print(f"Failed to send POST notification: {e}")
-
-    def monitor(self) -> bool:
-        """
-        モーション検知を監視
-        Returns:
-            bool: モーション検知シーケンスが完了した場合True、
-                 　ユーザーによる中断の場合False
-        """
-        try:
-            print("Motion monitoring started...")
+            print("PIRセンサーの監視を開始します...")
+            print("Ctrl+Cで終了します")
+            
+            time.sleep(2)  # センサーの初期化待ち
             
             while True:
-                sleep(SENSOR_INTERVAL)
+                current_time = time.time()
+                pir_state = lgpio.gpio_read(self.h, self.pir_pin)
                 
-                # PIRセンサーの状態を読み取り
-                if lgpio.gpio_read(self.h, self.pir_pin) == 1:
-                    self.detection_count += 1
-                    self.no_detection_count = 0
-                    print("Motion detected!", self.detection_count)
-                    
-                    # 検知閾値に達し、タイマーが動いていない場合
-                    if self.detection_count >= DETECTION_THRESHOLD and not self.timer_running:
-                        start_message = "Motion detected: Timer started!"
-                        print(start_message)
-                        # TODO: エンドポイント完成後コメントアウト
-                        # self.send_post_notification(start_message)
-                        self.timer_running = True
-                        self.start_time = time()
-                        self.detection_count = 0
+                # フラグのリセット
+                self.detection_started = False
+                self.detection_ended = False
                 
-                else:
-                    self.no_detection_count += 1
-                    self.detection_count = 0
-                    print("No motion", self.no_detection_count)
+                if pir_state:  # 人を検知
+                    self.last_detection_time = current_time
+                    if not self.person_present:
+                        self.person_present = True
+                        self.detection_started = True
+                        self.current_session_start = datetime.now()
+                
+                # 一定時間検知がない場合
+                elif (current_time - self.last_detection_time > self.presence_timeout 
+                      and self.person_present):
+                    self.person_present = False
+                    self.detection_ended = True
                     
-                    # 不検知閾値に達し、タイマーが動いている場合
-                    if self.no_detection_count >= NO_DETECTION_THRESHOLD and self.timer_running:
-                        elapsed_time = time() - self.start_time
-                        stop_message = f"Motion stopped: Timer ended after {elapsed_time:.2f} seconds"
-                        print(stop_message)
-                        self.send_post_notification(stop_message)
-                        print("Sensor monitoring ended.")
-                        return True  # モーション検知シーケンス完了
+                    if self.current_session_start:
+                        self.current_duration = (datetime.now() - self.current_session_start).total_seconds()
+                        self.current_session_start = None
+                
+                # 現在進行中のセッションの滞在時間を更新
+                if self.person_present and self.current_session_start:
+                    self.current_duration = (datetime.now() - self.current_session_start).total_seconds()
+                
+                time.sleep(0.1)
                 
         except KeyboardInterrupt:
-            print("\nProgram terminated by user")
-            return False
+            print("\nプログラムを終了します")
+            if self.person_present and self.current_session_start:
+                self.current_duration = (datetime.now() - self.current_session_start).total_seconds()
+            
         finally:
             self.cleanup()
+
+    def is_detection_started(self):
+        return self.detection_started
+
+    def is_detection_ended(self):
+        return self.detection_ended
+
+    def get_current_duration(self):
+        return int(self.current_duration)
+
+    def set_timeout(self, seconds):
+        self.presence_timeout = seconds
 
     def cleanup(self):
         """リソースの解放"""
         try:
             lgpio.gpiochip_close(self.h)
-            print("GPIO cleaned up")
         except:
             pass
-
