@@ -52,7 +52,7 @@ class PIRMotionDetector:
                 self.detection_started = False
                 self.detection_ended = False
                 
-                if pir_state:  # 人を検知
+                if pir_state == 1:  # 人を検知
                     self.last_detection_time = current_time
                     if not self.person_present:
                         self.person_present = True
