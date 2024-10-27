@@ -45,7 +45,7 @@ export const getData = https.onRequest({
   res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST");
   try {
     const data = await db.doc("dev/data").get();
-    res.status(200).send(data);
+    res.status(200).send(data.data());
   } catch (e) {
     res.status(500).send(`error ${e}`);
   }
