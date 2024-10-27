@@ -7,7 +7,7 @@ from . import config
 
 # 全てのパブリックインターフェースを定義
 __all__ = [
-    'MotionDetector',
+    'PIRMotionDetector', 
     'MotorController',
     'config'
 ]
