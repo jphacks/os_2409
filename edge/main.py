@@ -25,8 +25,6 @@ def handle_detection_end(duration):
     # ここに検知終了時の追加処理を記述
     set_in_room(False)
 
-    
-
 
 def main():
     try:
@@ -37,16 +35,16 @@ def main():
 
         monitor = PIRMotionDetector()
         monitor.start_monitoring()
-        
+        motor = MotorController()
+        motor.setup()
+
         print("メインループを開始します...")
         while True:
             try:
-                motor = MotorController()
-                motor.setup()
                 # 検知開始の判定
                 if monitor.is_detection_started():
                     handle_detection_start()
-                
+
                 # 検知終了の判定
                 if monitor.is_detection_ended():
                     handle_detection_end(monitor.get_current_duration())
@@ -54,15 +52,12 @@ def main():
                     time.sleep(1)
                     motor.rotate(MOTOR_TURNS, clockwise=True)
 
-
-                
-                
                 time.sleep(0.1)  # CPU負荷軽減のための短い待機
-                
+
             except Exception as e:
                 print(f"処理中にエラーが発生しました: {e}")
                 time.sleep(1)  # エラー時は少し長めに待機
-            
+
     except KeyboardInterrupt:
         print("\n\n=== プログラムを終了します ===")
     except Exception as e:
