@@ -43,8 +43,8 @@ SmartThroneは、既存の手動式トイレを簡単に自動化できるスマ
 | **便記録** | イラストによる便の記録で体調管理をサポート |
 
 # 📹️デモ動画
-![SmartThrone Demo](https://github.com/user-attachments/assets/e3038ccb-e7d2-4a0a-a307-8a5fc9875253)
-![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)
+[![SmartThrone Demo](https://github.com/user-attachments/assets/e3038ccb-e7d2-4a0a-a307-8a5fc9875253)](https://youtu.be/YLie7DVSkCo)
+[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/YLie7DVSkCo)
 
 ### 📸 スクリーンショット
 
