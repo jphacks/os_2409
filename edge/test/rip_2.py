@@ -72,7 +72,7 @@ class PIRSensor:
 def main():
     # PIRセンサーのインスタンスを作成
     # ピン番号は実際の接続に合わせて変更してください
-    pir = PIRSensor(pir_pin=17, led_pin=18)
+    pir = PIRSensor(pir_pin=18)
     
     try:
         # 必要に応じて不在判定時間を調整（例: 5秒）
