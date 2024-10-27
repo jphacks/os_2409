@@ -24,7 +24,6 @@ class PIRSensor:
             print("PIRセンサーの監視を開始します...")
             print("Ctrl+Cで終了します")
             print(f"PIRセンサーピン: {self.pir_pin}")
-            print(f"LEDピン: {self.led_pin}")
             
             # センサーの初期化待ち
             time.sleep(2)
