@@ -1,7 +1,7 @@
 __version__ = '1.0.0'
 
 # 主要なクラスとモジュールを直接インポートできるようにする
-from .motion_detector import MotionDetector
+from .rip_motion_detector import PIRMotionDetector
 from .motor_controller import MotorController
 from . import config
 

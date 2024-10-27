@@ -2,7 +2,7 @@
 import os
 import sys
 
-from edge.motion_detector import PIRMotionDetector
+from edge.rip_motion_detector import PIRMotionDetector
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from edge import MotionDetector, MotorController
