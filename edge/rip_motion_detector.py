@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 import lgpio # type: ignore
 import threading
-from edge.config import MOTION_SENSOR_PIN, PIR_SETTINGS
+from config import MOTION_SENSOR_PIN, PIR_SETTINGS
 
 class PIRMotionDetector:
     def __init__(self):
@@ -15,28 +15,12 @@ class PIRMotionDetector:
         self.pir_pin = MOTION_SENSOR_PIN
         self.presence_timeout = PIR_SETTINGS
          # GPIO初期化時のエラーハンドリングを追加
-        try:
-            # 既存のlgpioプロセスをクリーンアップ
-            subprocess.run(['sudo', 'killall', 'lgpiod'], 
-                         stdout=subprocess.PIPE, 
-                         stderr=subprocess.PIPE)
-            time.sleep(1)  # プロセス終了待ち
+      
+        self.h = lgpio.gpiochip_open(0)
+        lgpio.gpio_claim_input(self.h, self.pir_pin)
+        print("GPIOの初期化に成功しました")
             
-            # lgpiodを再起動
-            subprocess.run(['sudo', 'lgpiod'], 
-                         stdout=subprocess.PIPE, 
-                         stderr=subprocess.PIPE)
-            time.sleep(1)  # 起動待ち
-            
-            # GPIO初期化
-            self.h = lgpio.gpiochip_open(0)
-            lgpio.gpio_claim_input(self.h, self.pir_pin)
-            print("GPIOの初期化に成功しました")
-            
-        except Exception as e:
-            print(f"GPIO初期化エラー: {e}")
-            print("プログラムを終了します")
-            sys.exit(1)
+    
         
         
         print(f"初期化: PIN={self.pir_pin}, TIMEOUT={self.presence_timeout}")

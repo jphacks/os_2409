@@ -7,7 +7,7 @@ from edge.config import MOTOR_TURNS, MOTION_SENSOR_PIN, PIR_SETTINGS
 import time
 
 from save2firestore_copy import set_in_room
-from slack_notification_copy import send_poop_complished_msg
+
 
 def handle_detection_start():
     """検知開始時の処理"""
@@ -30,7 +30,7 @@ def handle_detection_end(duration):
     time.sleep(1)
     MotorController().rotate(MOTOR_TURNS, clockwise=True)
 
-    send_poop_complished_msg(0.5, True)
+
 
 def main():
     try:
@@ -71,4 +71,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    send_poop_complished_msg(0.5, True)
