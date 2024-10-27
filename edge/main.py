@@ -25,11 +25,7 @@ def handle_detection_end(duration):
     # ここに検知終了時の追加処理を記述
     set_in_room(False)
 
-    # トイレ流す
-    MotorController().rotate(MOTOR_TURNS, clockwise=True)
-    time.sleep(1)
-    MotorController().rotate(MOTOR_TURNS, clockwise=True)
-
+    
 
 
 def main():
@@ -45,6 +41,8 @@ def main():
         print("メインループを開始します...")
         while True:
             try:
+                motor = MotorController()
+                motor.setup()
                 # 検知開始の判定
                 if monitor.is_detection_started():
                     handle_detection_start()
@@ -52,6 +50,12 @@ def main():
                 # 検知終了の判定
                 if monitor.is_detection_ended():
                     handle_detection_end(monitor.get_current_duration())
+                    motor.rotate(MOTOR_TURNS, clockwise=True)
+                    time.sleep(1)
+                    motor.rotate(MOTOR_TURNS, clockwise=True)
+
+
+                
                 
                 time.sleep(0.1)  # CPU負荷軽減のための短い待機
                 
