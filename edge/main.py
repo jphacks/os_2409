@@ -1,11 +1,9 @@
-# edge/main.py
 import os
 import sys
-
-from edge.rip_motion_detector import PIRMotionDetector
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from edge import MotionDetector, MotorController
+# パッケージからのインポート（__init__.pyで定義されたもの）
+from edge import PIRMotionDetector, MotorController
 from edge.config import MOTOR_TURNS
 import time
 
