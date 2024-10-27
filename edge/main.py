@@ -10,7 +10,6 @@ def main():
     try:
         monitor = PIRMotionDetector()
         monitor.start_monitoring()
-        print("PIRセンサーの監視を開始します...")
 
         while True:
             # 検知開始の判定
