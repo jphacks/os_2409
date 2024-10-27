@@ -61,7 +61,7 @@ SmartThroneは、既存の手動式トイレを簡単に自動化できるスマ
 | ![メイン画面](https://github.com/user-attachments/assets/658e64a7-6c97-417b-95a7-561d85e05a02) |
 | ![メイン画面](https://github.com/user-attachments/assets/1b6f26e7-f4af-43bb-bc64-b0e893de0ce8) |
 | ![メイン画面](https://github.com/user-attachments/assets/86b4465e-b0fc-439c-87b9-0a569970875f) |
-| ![メイン画面]([/screenshots/main.png](https://github.com/user-attachments/assets/4ed12803-d1a0-476e-be38-8aa91d74af52)) |
+| ![メイン画面](https://github.com/user-attachments/assets/4ed12803-d1a0-476e-be38-8aa91d74af52) |
 
 
 ### 🎯 解決できること
