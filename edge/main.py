@@ -6,39 +6,55 @@ from edge import PIRMotionDetector, MotorController
 from edge.config import MOTOR_TURNS, MOTION_SENSOR_PIN, PIR_SETTINGS
 import time
 
+def handle_detection_start():
+    """検知開始時の処理"""
+    print("\n=== 人を検知しました ===")
+    print(f"検知時刻: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    # ここに検知開始時の追加処理を記述
+
+def handle_detection_end(duration):
+    """検知終了時の処理"""
+    print("\n=== 検知を終了します ===")
+    print(f"終了時刻: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"滞在時間: {duration}秒")
+    # ここに検知終了時の追加処理を記述
+
 def main():
     try:
-        print("\n=== プログラム開始 ===")
-        print(f"設定値確認:")
-        print(f"MOTION_SENSOR_PIN: {MOTION_SENSOR_PIN}")
-        print(f"PIR_SETTINGS: {PIR_SETTINGS}")
-        print("===================\n")
+        print("\n=== PIRモーションセンサー監視システム ===")
+        print(f"センサーピン: {MOTION_SENSOR_PIN}")
+        print(f"タイムアウト時間: {PIR_SETTINGS}秒")
+        print("=====================================\n")
 
         monitor = PIRMotionDetector()
-        print("PIRMotionDetectorを初期化しました")
-        
         monitor.start_monitoring()
-        print("モニタリングを開始しました")
-
+        
+        print("メインループを開始します...")
         while True:
-            # 検知開始の判定
-            if monitor.is_detection_started():
-                print("検知を開始しました")
+            try:
+                # 検知開始の判定
+                if monitor.is_detection_started():
+                    handle_detection_start()
                 
-            # 検知終了の判定
-            if monitor.is_detection_ended():
-                print(f"検知を終了しました - 滞在時間: {monitor.get_current_duration()}秒")
+                # 検知終了の判定
+                if monitor.is_detection_ended():
+                    handle_detection_end(monitor.get_current_duration())
                 
-            time.sleep(1)
+                time.sleep(0.1)  # CPU負荷軽減のための短い待機
+                
+            except Exception as e:
+                print(f"処理中にエラーが発生しました: {e}")
+                time.sleep(1)  # エラー時は少し長めに待機
             
     except KeyboardInterrupt:
-        print("\nプログラムを終了します")
+        print("\n\n=== プログラムを終了します ===")
     except Exception as e:
-        print(f"予期せぬエラーが発生しました: {e}")
+        print(f"\n予期せぬエラーが発生しました: {e}")
     finally:
         if 'monitor' in locals():
             monitor.cleanup()
-            print("クリーンアップ完了")
+            print("クリーンアップが完了しました")
+            print("===============================")
 
 if __name__ == "__main__":
     main()
