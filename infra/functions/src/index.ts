@@ -25,10 +25,27 @@ const db = getFirestore();
 export const editData = https.onRequest({
   region: "asia-northeast2",
 }, async (req, res) => {
+  res.set("Access-Control-Allow-Headers", "*");
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST");
   try {
     logger.log(req.body);
     await db.doc("dev/data").set(req.body, {merge: true});
     res.status(200).send("edit complete!");
+  } catch (e) {
+    res.status(500).send(`error ${e}`);
+  }
+});
+
+export const getData = https.onRequest({
+  region: "asia-northeast2",
+}, async (req, res) => {
+  res.set("Access-Control-Allow-Headers", "*");
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS, POST");
+  try {
+    const data = await db.doc("dev/data").get();
+    res.status(200).send(data);
   } catch (e) {
     res.status(500).send(`error ${e}`);
   }
