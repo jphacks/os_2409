@@ -10,9 +10,7 @@ MOTOR_PINS = {
 }
 
 # Motion detection settings
-DETECTION_THRESHOLD = 5
-NO_DETECTION_THRESHOLD = 5
-SENSOR_INTERVAL = 0.1
+PIR_SETTINGS = 4.0
 
 # Motor settings
 MOTOR_DELAY = 0.001
