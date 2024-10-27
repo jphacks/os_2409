@@ -1,6 +1,10 @@
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from edge import PIRMotionDetector, MotorController
+from edge.config import MOTOR_TURNS, MOTION_SENSOR_PIN, PIR_SETTINGS
 import time
-from edge.config import MOTION_SENSOR_PIN, PIR_SETTINGS
-from edge.rip_motion_detector import PIRMotionDetector
 
 def main():
     try:
