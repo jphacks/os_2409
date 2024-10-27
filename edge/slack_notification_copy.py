@@ -1,16 +1,13 @@
 import os
 import slackweb
-from dotenv import load_dotenv
 # import sys
 
 # sys.path.append("../")d
 from save2firestore.index import get_unch_type
 
-load_dotenv()
-
 
 def __send(msg):
-    slack = slackweb.Slack(url=os.getenv("slack_url"))
+    slack = slackweb.Slack(url=os.getenv("https://hooks.slack.com/services/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"))
     slack.notify(text=msg)
 
 

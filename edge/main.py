@@ -6,11 +6,16 @@ from edge import PIRMotionDetector, MotorController
 from edge.config import MOTOR_TURNS, MOTION_SENSOR_PIN, PIR_SETTINGS
 import time
 
+from save2firestore import set_in_room
+from slack_notification_copy import send_poop_complished_msg
+
 def handle_detection_start():
     """検知開始時の処理"""
     print("\n=== 人を検知しました ===")
     print(f"検知時刻: {time.strftime('%Y-%m-%d %H:%M:%S')}")
     # ここに検知開始時の追加処理を記述
+    set_in_room(True)
+
 
 def handle_detection_end(duration):
     """検知終了時の処理"""
@@ -18,6 +23,14 @@ def handle_detection_end(duration):
     print(f"終了時刻: {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"滞在時間: {duration}秒")
     # ここに検知終了時の追加処理を記述
+    set_in_room(False)
+
+    # トイレ流す
+    MotorController().rotate(MOTOR_TURNS, clockwise=True)
+    time.sleep(1)
+    MotorController().rotate(MOTOR_TURNS, clockwise=True)
+
+    send_poop_complished_msg(0.5, True)
 
 def main():
     try:
@@ -58,3 +71,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    send_poop_complished_msg(0.5, True)
