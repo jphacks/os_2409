@@ -5,7 +5,7 @@
 
 # 🚽 SmartThrone（スマートイレ）
 
-[![SmartThrone Demo](https://jphacks.com/wp-content/uploads/2024/07/JPHACKS2024_ogp.jpg)](https://youtu.be/YLie7DVSkCo)
+![SmartThrone Demo](https://github.com/user-attachments/assets/c82dc021-0f58-4b4b-b0bb-23a5f9b8c84f)
 
 ## 📌 製品概要
 
