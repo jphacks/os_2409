@@ -1,6 +1,10 @@
 import os
 import slackweb
 from dotenv import load_dotenv
+import sys
+
+sys.path.append("../")
+from save2firestore.index import get_unch_type
 
 load_dotenv()
 
@@ -12,7 +16,8 @@ def __send(msg):
 
 def send_poop_complished_msg(used_paper_length, should_user_provide_paper):
     msg = (
-        "素晴らしいトイレでした！！\n"
+        "<<トイレリザルト>>\n"
+        f"出したうんちの種類：{get_unch_type().get_name()}\n"
         f"使用したトイレットペーパーの長さ：約{used_paper_length}m\n"
         "トイレ滞在時間：3分20秒\n"
         "ちゃんと手を洗いました！\n\n"

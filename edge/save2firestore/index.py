@@ -25,19 +25,29 @@ class UnchType(Enum):
     KATAI = "katai"
     KOROKORO = "korokoro"
     BISHA = "bisha"
+    UNDEFINED = ""
 
     @classmethod
     def value_of(cls, target_value):
         for e in UnchType:
             if e.value == target_value:
                 return e
-        raise ValueError("{} は有効な値ではありません".format(target_value))
+        return UnchType.UNDEFINED
+
+    def get_name(self):
+        if self == UnchType.BANANA:
+            return "バナナうんち🍌"
+        elif self == UnchType.KATAI:
+            return "硬いうんち🪨"
+        elif self == UnchType.KOROKORO:
+            return "コロコロうんち🍇"
+        elif self == UnchType.BISHA:
+            return "びしゃびしゃうんち💧"
+        return "不明 💩<もしかして僕出れなかった...?"
 
 
 def get_unch_type() -> UnchType:
     raw_value = __get()["unch_type"]
-    if raw_value == None:
-        raise ValueError("unch_typeが存在しませんでした")
     return UnchType.value_of(raw_value)
 
 
