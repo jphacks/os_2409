@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 
 class PIRSensor:
-    def __init__(self, pir_pin=18,):
+    def __init__(self, pir_pin=18):
         # lgpioの初期化
         self.h = lgpio.gpiochip_open(0)
         
@@ -13,7 +13,6 @@ class PIRSensor:
         
         # ピンのモード設定
         lgpio.gpio_claim_input(self.h, self.pir_pin)
-        lgpio.gpio_claim_output(self.h, self.led_pin)
         
         # 検知状態の追跡用変数
         self.last_detection_time = 0
