@@ -6,7 +6,7 @@ from edge import PIRMotionDetector, MotorController
 from edge.config import MOTOR_TURNS, MOTION_SENSOR_PIN, PIR_SETTINGS
 import time
 
-from save2firestore import set_in_room
+from save2firestore_copy import set_in_room
 from slack_notification_copy import send_poop_complished_msg
 
 def handle_detection_start():
