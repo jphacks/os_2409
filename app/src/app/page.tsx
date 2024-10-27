@@ -8,7 +8,6 @@ import BananaUnch from "../../public/banana.png";
 import KataiUnch from "../../public/katai.png";
 import BishaUnch from "../../public/bisha.png";
 import { RealtimeClient } from "@openai/realtime-api-beta";
-import { WavRenderer } from "@/lib/wavtools/index.js";
 import { ItemType } from "@openai/realtime-api-beta/dist/lib/client";
 import { WavRecorder, WavStreamPlayer } from "../lib/wavtools/index.js";
 import { instructions } from "../utils/conversation_config";
@@ -17,7 +16,10 @@ type Data = {
   in_room: boolean;
 };
 
+type PageType = "screen_save" | "first" | "conversation" | "finish";
+
 export default function Home() {
+  const [pageType, setPageType] = useState<PageType>("screen_save");
   const [data, setData] = useState<Data>({
     in_room: false,
   });
@@ -33,15 +35,38 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log("data", data);
-  }, [data]);
+    if (data.in_room) {
+      setPageType("first");
+    } else {
+      setPageType("screen_save");
+    }
+  }, [data.in_room]);
 
-  return data.in_room ? (
-    // <FirstScreen />
-    <ConversationScreen />
-  ) : (
-    <div className="h-screen w-screen bg-black" />
-  );
+  let timer: NodeJS.Timeout;
+  useEffect(() => {
+    clearTimeout(timer);
+    if (pageType === "first") {
+      timer = setTimeout(() => setPageType("conversation"), 10 * 1000);
+    }
+    if (pageType === "conversation") {
+      timer = setTimeout(() => setPageType("finish"), 5 * 60 * 1000);
+    }
+  }, [pageType, setPageType]);
+
+  const screenBuilder = () => {
+    switch (pageType) {
+      case "screen_save":
+        return <div className="h-screen w-screen bg-black" />;
+      case "first":
+        return <FirstScreen />;
+      case "conversation":
+        return <ConversationScreen />;
+      case "finish":
+        return <FinishScreen />;
+    }
+  };
+
+  return screenBuilder();
 }
 
 function FirstScreen() {
@@ -53,6 +78,23 @@ function FirstScreen() {
             おはよう☀️
             <br />
             ぼくがでそう？
+          </p>
+        </div>
+        <h1 className="text-9xl">💩</h1>
+      </div>
+    </div>
+  );
+}
+
+function FinishScreen() {
+  return (
+    <div className="flex justify-center h-screen">
+      <div className="text-center my-auto">
+        <div className="balloon text-center">
+          <p className="text-8xl" style={{ margin: 24 }}>
+            ちょっとトイレしすぎだよ！！
+            <br />
+            また今度会おう👋
           </p>
         </div>
         <h1 className="text-9xl">💩</h1>
@@ -242,13 +284,13 @@ function ConversationScreen() {
         </button>
       </div>
       <div className="h-10" />
-      <Component />
+      <RatingBar />
     </div>
   );
 }
 
-// 評価するコンポーネント TODO あとで名前変える
-function Component() {
+// うんちタイプを選択するコンポーネント
+function RatingBar() {
   const [unchType, setUnchType] = useState("");
 
   useEffect(() => {
