@@ -1,6 +1,8 @@
 # edge/main.py
 import os
 import sys
+
+from edge.motion_detector import PIRMotionDetector
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from edge import MotionDetector, MotorController
@@ -9,8 +11,9 @@ import time
 
 def main():
     try:
-        detector = MotionDetector()
+        detector = PIRMotionDetector()
         motion_completed = detector.monitor()
+        print(f"Monitoring completed: {'Successfully' if motion_completed else 'Interrupted'}")
 
         if motion_completed:
             motor = MotorController()
