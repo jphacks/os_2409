@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Output of AudioAnalysis for the frequency domain of the audio
  * @typedef {Object} AudioAnalysisOutputType
@@ -28,7 +29,7 @@ export class AudioAnalysis {
      * @param {AudioBuffer|null} [audioBuffer] If provided, will cache all frequency domain data from the buffer
      * @returns {AudioAnalysis}
      */
-    constructor(audioElement: HTMLAudioElement, audioBuffer?: AudioBuffer | null);
+    constructor(audioElement: HTMLAudioElement, audioBuffer?: AudioBuffer | null): AudioAnalysis;
     fftResults: any[];
     audio: HTMLAudioElement;
     context: any;

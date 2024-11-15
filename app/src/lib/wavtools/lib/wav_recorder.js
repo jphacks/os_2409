@@ -251,6 +251,7 @@ export class WavRecorder {
         });
         const tracks = stream.getTracks();
         tracks.forEach((track) => track.stop());
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         window.alert('You must grant microphone access to use this feature.');
       }
@@ -317,6 +318,7 @@ export class WavRecorder {
         config.audio = { deviceId: { exact: deviceId } };
       }
       this.stream = await navigator.mediaDevices.getUserMedia(config);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       throw new Error('Could not start media stream');
     }

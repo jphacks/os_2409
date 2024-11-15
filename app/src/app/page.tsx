@@ -43,14 +43,14 @@ export default function Home() {
     }
   }, [data.in_room]);
 
-  let timer: NodeJS.Timeout;
+  const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
-    clearTimeout(timer);
+    clearTimeout(timer.current);
     if (pageType === "first") {
-      timer = setTimeout(() => setPageType("conversation"), 10 * 1000);
+      timer.current = setTimeout(() => setPageType("conversation"), 10 * 1000);
     }
     if (pageType === "conversation") {
-      timer = setTimeout(() => setPageType("finish"), 5 * 60 * 1000);
+      timer.current = setTimeout(() => setPageType("finish"), 5 * 60 * 1000);
     }
   }, [pageType, setPageType]);
 
@@ -209,6 +209,7 @@ function ConversationScreen() {
     // Set transcription, otherwise we don't get user transcriptions back
     client.updateSession({ input_audio_transcription: { model: "whisper-1" } });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     client.on("error", (event: any) => console.error(event));
     client.on("conversation.interrupted", async () => {
       const trackSampleOffset = await wavStreamPlayer.interrupt();
@@ -217,6 +218,7 @@ function ConversationScreen() {
         await client.cancelResponse(trackId, offset);
       }
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     client.on("conversation.updated", async ({ item, delta }: any) => {
       const items = client.conversation.getItems();
       if (delta?.audio) {

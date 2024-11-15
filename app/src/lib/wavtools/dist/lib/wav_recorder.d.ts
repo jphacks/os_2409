@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Decodes audio into a wav file
  * @typedef {Object} DecodedAudioType

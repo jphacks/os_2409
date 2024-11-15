@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * All note frequencies from 1st to 8th octave
  * in format "A#8" (A#, 8th octave)
