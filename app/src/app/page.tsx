@@ -5,6 +5,7 @@ import { db } from "@/repository/frontend/firebase";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import BananaUnch from "../../public/banana.png";
+import KorokoroUnch from "../../public/korokoro.png";
 import KataiUnch from "../../public/katai.png";
 import BishaUnch from "../../public/bisha.png";
 import { RealtimeClient } from "@openai/realtime-api-beta";
@@ -335,9 +336,10 @@ function RatingBar() {
         }`}
       >
         <Image
-          src={BananaUnch}
+          src={KorokoroUnch}
           alt="コロコロうんちの画像"
           onClick={() => setUnchType("korokoro")}
+          className="h-40"
         />
         <p className="text-5xl mt-12 mx-auto">コロコロ</p>
       </button>
